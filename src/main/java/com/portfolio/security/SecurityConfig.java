@@ -66,10 +66,10 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/profile", "/api/skills", "/api/projects", "/api/certificates", "/api/resume", "/api/contact", "/api/experiences").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/profile", "/api/skills", "/api/projects", "/api/certificates", "/api/resume", "/api/contact", "/api/experiences").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 
@@ -87,10 +87,10 @@ public class SecurityConfig {
             "http://127.0.0.1:5500",
 
             // Public Portfolio
-            "https://itzmedev16.github.io/Portfolio-public-/",
+            "https://itzmedev16.github.io",
 
             // Admin Frontend
-            "https://portfolio-admin-eight-theta.vercel.app/login.html?redirect=dashboard.html"
+            "https://portfolio-admin-eight-theta.vercel.app"
     ));
 
     configuration.setAllowedMethods(Arrays.asList(
