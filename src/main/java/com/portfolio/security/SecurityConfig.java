@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,7 +55,13 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+            authProvider.setUserDetailsService(userDetailsService);
+            authProvider.setPasswordEncoder(passwordEncoder());
+            return authProvider;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -77,6 +84,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
