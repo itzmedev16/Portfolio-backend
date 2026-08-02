@@ -22,15 +22,37 @@ public class AuthService {
         this.tokenProvider = tokenProvider;
     }
 
-    public JwtResponse authenticateUser(LoginRequest loginRequest) {
+//    public JwtResponse authenticateUser(LoginRequest loginRequest) {
         // Authenticate using the manager (which delegates to CustomUserDetailsService)
+  //      Authentication authentication = authenticationManager.authenticate(
+    //            new UsernamePasswordAuthenticationToken(
+      //                  loginRequest.getEmail(),
+        //                loginRequest.getPassword()
+          //      )
+        //);
+    public JwtResponse authenticateUser(LoginRequest loginRequest) {
+    log.info("Login attempt: {}", loginRequest.getEmail());
+    try {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
                         loginRequest.getPassword()
                 )
         );
-
+        log.info("Authentication SUCCESS");
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = tokenProvider.generateToken(authentication);
+        User userPrincipal = (User) authentication.getPrincipal();
+        return new JwtResponse(
+                jwt,
+                userPrincipal.getUsername(),
+                userPrincipal.getAuthorities().iterator().next().getAuthority()
+        );
+    } catch (Exception e) {
+        log.error("Authentication FAILED", e);
+        throw e;
+    }
+}
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Generate JWT token
